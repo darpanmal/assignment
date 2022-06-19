@@ -29,27 +29,22 @@ public class TrigramAlgorithm {
 
     private static final int ADJACENT_WORDS_COUNT = 2;
 
+
     /**
      * This method is used to create trigram algorithms.
      *
-     * @param
-     * @return String
      * @throws IOException
      */
-    public List<String> trigramAlgorithm() throws IOException {
-        //read data from file
-        String inputFileLocation = System.getProperty("user.dir")+inputFilePath;
-        String outputFileLocation = System.getProperty("user.dir")+outputFilePath;
+    public void trigramAlgorithm() throws IOException {
+        String inputFileLocation = System.getProperty("user.dir") + inputFilePath;
+        String outputFileLocation = System.getProperty("user.dir") + outputFilePath;
         String fileInputData = fileReader(inputFileLocation);
-        //generate trigram keySet words
         Map<String, List<String>> result = createWords(fileInputData, ADJACENT_WORDS_COUNT);
         List<String> records = new ArrayList<>();
         result.entrySet().forEach(entry -> {
             records.add(entry.getKey() + " -> " + entry.getValue());
         });
-        //write data to file
         fileWriter(records, outputFileLocation);
-        return records;
     }
 
     /**
@@ -59,7 +54,7 @@ public class TrigramAlgorithm {
      * @param adjacentWords
      * @return
      */
-    public Map<String, List<String>> createWords(String fileText, int adjacentWords) {
+    private Map<String, List<String>> createWords(String fileText, int adjacentWords) {
         Map<String, List<String>> trigramMap = new HashMap<>();
         String[] words = formatText(fileText).split(" ");
         IntStream.range(0, words.length - adjacentWords)
@@ -87,7 +82,7 @@ public class TrigramAlgorithm {
      * @param
      * @return
      */
-    public String fileReader(String inputFilePath)
+    private String fileReader(String inputFilePath)
             throws IOException {
         StringBuffer resultStringBuffer = new StringBuffer();
         try (BufferedReader br
@@ -112,16 +107,16 @@ public class TrigramAlgorithm {
         Files.write(path, keySetWords, StandardCharsets.UTF_8);
     }
 
+    /**
+     * This method is used to format file.
+     *
+     * @param text
+     * @return
+     */
     private String formatText(final String text) {
         return text.replaceAll("\\n", " ")
-                .replaceAll("[^\\w\\s\']"," ")
+                .replaceAll("[^\\w\\s\']", " ")
                 .replaceAll("([ ]+)", " ");
-    }
-
-    public static void main(String[] args) throws IOException {
-        TrigramAlgorithm trigramAlgorithm = new TrigramAlgorithm();
-        List<String> trigramKeySet = trigramAlgorithm.trigramAlgorithm();
-        System.out.println(trigramKeySet);
     }
 
 }
